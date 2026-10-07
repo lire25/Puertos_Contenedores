@@ -31,9 +31,26 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="arbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="arbol.h" />
+		<Unit filename="cola.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cola.h" />
+		<Unit filename="lista.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lista.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="pila.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="pila.h" />
+		<Unit filename="utilidades.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
