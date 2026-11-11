@@ -43,7 +43,7 @@ int almac_tiene_cont(tPuerto* puerto, unsigned zona_id, tContenedor pedido)
 
     pila_vaciar(&pila_aux);
 
-    return res ? 1+cant_reu : 0;
+    return res ? cant_reu : 0;
 
 }
 

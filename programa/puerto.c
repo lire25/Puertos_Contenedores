@@ -43,6 +43,8 @@ void puerto_crear(tPuerto *puerto, tConf conf)
 
     puerto->minuto_actual = 0;
 
+    jornada_iniciar_registro(&puerto->jregistro);
+
 }
 
 void puerto_iniciar_jornada(tPuerto *puerto, tConf conf)
@@ -61,6 +63,14 @@ void puerto_reiniciar_jornada(tPuerto *puerto, tConf conf)
 {
 
     puerto_destruir(puerto);
+
+    jornada_mostrar_registro(&puerto->jregistro, stdout, conf);
+
+    printf("\nENTER PARA REINTENTAR");
+    fgetc(stdin);
+
+    system("cls");
+
     puerto_crear(puerto, conf);
 
 }
@@ -68,6 +78,7 @@ void puerto_destruir(tPuerto *puerto)
 {
 
     tBuque buque;
+    tCamion cam;
 
     //limpiar muelles
     lista_recorrer(&puerto->muelles, muelle_limpiar, NULL);
@@ -81,7 +92,11 @@ void puerto_destruir(tPuerto *puerto)
     }
 
     //limpiar fila de camiones
-    cola_vaciar(&puerto->camiones_fila);
+    while (!cola_es_vacia(&puerto->camiones_fila))
+    {
+        puerto->jregistro.cam_pend++;
+        cola_sacar(&puerto->camiones_fila, &cam, sizeof(tCamion));
+    }
 
     //limpiar almacenamiento
     lista_recorrer(&puerto->zonas_alm, almac_limpiar, NULL);
@@ -221,10 +236,6 @@ void puerto_mostrar_camiones(tCola *cola, FILE *fp)
 int puerto_hay_operacion(tPuerto* puerto)
 {
 
-    //HAY OPERACION SI:
-    //-HAY BUQUES EN MUELLE Y HAY ESPACIO EN ALMACENAMIENTO
-    //-HAY CAMION EN FILA Y EL CONTENEDOR PEDIDO ESTA EN ALCANCE
-
     if (puerto->minuto_actual > puerto->config.duracion_jornada_minutos)
         return 0;
 
@@ -232,29 +243,43 @@ int puerto_hay_operacion(tPuerto* puerto)
     tBuque muelle;
 
     int hay_espacio = almac_tiene_espacio(puerto); //si existe almacenamiento disp
+    int cant_reu; //cantidad de reubicaciones necesarias
+
+    unsigned duracion_maxima = puerto->config.duracion_jornada_minutos - puerto->minuto_actual; //la maxima cantidad de minutos que puede durar una operacion
+
+    int hay_op = 0;
+
+    if (!cola_es_vacia(&puerto->camiones_fila))
+    {
+        cola_ver_primero(&puerto->camiones_fila, &sig_cam, sizeof(tCamion));
+        for (int i = 0; i < puerto->config.cant_zonas_alm; i++)
+        {
+            cant_reu = almac_tiene_cont(puerto, i, sig_cam.pedido);
+            //hay operacion si: esta el contenedor pedido en una zona y el tiempo que tomaria ubicarlo y entregarlo es aceptable
+            if (cant_reu)
+                hay_op = puerto->config.tiempo_carga_camion + puerto->config.tiempo_reu_cont*(cant_reu-1) <= duracion_maxima;
+        }
+    }
 
     for (int i = 0; i < puerto->config.cant_muelles; i++)
     {
         muelle = *(tBuque*) lista_ver_pos(&puerto->muelles, i);
         if (muelle.id != BUQUE_ID_INVALIDA && hay_espacio)
-            return 1;
+            hay_op |= puerto->config.tiempo_desc_cont <= duracion_maxima;
     }
 
-    if (cola_es_vacia(&puerto->camiones_fila)) return 0;
-
-    cola_ver_primero(&puerto->camiones_fila, &sig_cam, sizeof(tCamion));
-    for (int i = 0; i < puerto->config.cant_zonas_alm; i++)
-    {
-        if (almac_tiene_cont(puerto, i, sig_cam.pedido))
-            return 1;
-    }
-
-    return 0;
+    return hay_op;
 
 }
 
 int puerto_entregar(tPuerto *puerto)
 {
+
+    if (cola_es_vacia(&puerto->camiones_fila))
+    {
+        printf("\n-NO HAY CAMIONES EN FILA\n");
+        return;
+    }
 
     if (puerto->minuto_actual + puerto->config.tiempo_carga_camion > puerto->config.duracion_jornada_minutos)
     {
@@ -263,11 +288,17 @@ int puerto_entregar(tPuerto *puerto)
     }
 
     int zona = lista_recorrer(&puerto->zonas_alm, almac_zona_entregar, puerto);
+    int pudo_entregar = zona < puerto->config.cant_zonas_alm;
 
-    if (zona >= puerto->config.cant_zonas_alm)
+    if (pudo_entregar)
+    {
+        puerto->jregistro.conts_entr++;
+        puerto->jregistro.tiempo_usado = puerto->minuto_actual+puerto->config.tiempo_carga_camion;
+    }
+    else
         printf("\n-NADA QUE ENTREGAR\n");
 
-    return zona < puerto->config.cant_zonas_alm;
+    return pudo_entregar;
 
 }
 int puerto_reubicar(tPuerto *puerto, unsigned zona_orig, unsigned zona_dest)
@@ -307,6 +338,9 @@ int puerto_reubicar(tPuerto *puerto, unsigned zona_orig, unsigned zona_dest)
 
     pila_sacar(pila_orig, &cont, sizeof(tContenedor));
     pila_poner(pila_dest, &cont, sizeof(tContenedor));
+
+    puerto->jregistro.reub_cont++;
+    puerto->jregistro.tiempo_usado = puerto->minuto_actual+puerto->config.tiempo_reu_cont;
 
     return 1;
 
@@ -361,6 +395,10 @@ int puerto_descargar(tPuerto* puerto, unsigned muelle_orig, unsigned zona_dest)
 
     puerto->almac_cant[zona_dest] += 1;
 
+    puerto->jregistro.buques_des++;
+    puerto->jregistro.tiempo_usado = puerto->minuto_actual+puerto->config.tiempo_desc_cont;
+
     return 1;
 
 }
+

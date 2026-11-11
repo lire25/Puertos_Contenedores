@@ -169,3 +169,48 @@ int jornada_mostrar_cont_pila(tPila *pila, FILE *fp)
     return 0;
 
 }
+
+#define PUNTAJE_VALOR_DES 5
+#define PUNTAJE_VALOR_ENT 10
+//camion pendiente
+#define PUNTAJE_VALOR_CAM 2
+
+void jornada_iniciar_registro(tJornadaRegistro *jreg)
+{
+
+    jreg->buques_des = 0;
+    jreg->cam_pend = 0;
+    jreg->conts_entr = 0;
+    jreg->reub_cont = 0;
+    jreg->tiempo_usado = 0;
+
+}
+unsigned jornada_puntaje(const tJornadaRegistro *jreg)
+{
+
+    unsigned puntaje = 0;
+
+    puntaje += jreg->buques_des * PUNTAJE_VALOR_DES;
+    puntaje += jreg->conts_entr * PUNTAJE_VALOR_ENT;
+    puntaje -= minimo(puntaje, jreg->cam_pend*PUNTAJE_VALOR_CAM);
+
+    return puntaje;
+
+}
+void jornada_mostrar_registro(const tJornadaRegistro *jreg, FILE *fp, tConf conf)
+{
+
+    fprintf(fp, "\n---RESUMEN DE JORNADA---\n\n");
+
+    fprintf(fp, "Tiempo utilizado: %u min de %u\n", jreg->tiempo_usado, conf.duracion_jornada_minutos);
+    fprintf(fp, "Buqes descargados: %u | +%u puntos\n", jreg->buques_des, jreg->buques_des*PUNTAJE_VALOR_DES);
+    fprintf(fp, "Contenedores entregados: %u | +%u puntos\n", jreg->conts_entr, jreg->conts_entr*PUNTAJE_VALOR_ENT);
+    fprintf(fp, "Camiones pendientes: %u | -%u puntos\n", jreg->cam_pend, jreg->cam_pend*PUNTAJE_VALOR_CAM);
+    fprintf(fp, "Reorganizaciones: %u\n", jreg->reub_cont);
+    fprintf(fp, "Puntacion Final: %u puntos\n", jornada_puntaje(jreg));
+
+}
+void jornada_mostrar_historial(tJornadaRegistro *jreg)
+{
+
+}

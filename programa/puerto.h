@@ -5,6 +5,7 @@
 
 typedef struct {
     tJornada jornada_actual;
+    tJornadaRegistro jregistro;
     tLista zonas_alm;
     tCola camiones_fila;
     tCola buques_fila;

@@ -10,8 +10,7 @@
 /*
 
     TODO:
-    -sistema de puntaje
-    -muestra de resumen
+    -historial de operaciones
     -registro de operadores
 
 */
@@ -23,6 +22,8 @@
     system("clear");
 #endif
 */
+
+void finalizar_jornada(tPuerto*, tConf);
 
 int main()
 {
@@ -52,16 +53,7 @@ int main()
         {
 
             if (puerto_jornada_finalizada(&puerto))
-            {
-                puerto_reiniciar_jornada(&puerto, conf);
-                system("cls");
-                puerto_ejecutar_minuto(&puerto);
-                printf("\n~~~~~~~~~~~~~~~NUEVA JORNADA~~~~~~~~~~~~~~~\n");
-                lista_mostrar(&puerto.jornada_actual.buques_info, jornada_mostrar_buques, stdout);
-                lista_mostrar(&puerto.jornada_actual.camiones_info, jornada_mostrar_camiones, stdout);
-
-                printf("---\n\n");
-            }
+                finalizar_jornada(&puerto, conf);
             else
                 puerto_avanzar_minuto(&puerto, 1);
 
@@ -73,5 +65,19 @@ int main()
     }
 
     return 0;
+
+}
+
+void finalizar_jornada(tPuerto *puerto, tConf conf)
+{
+
+    puerto_reiniciar_jornada(puerto, conf);
+    puerto_ejecutar_minuto(puerto);
+
+    printf("\n~~~~~~~~~~~~~~~NUEVA JORNADA~~~~~~~~~~~~~~~\n");
+    lista_mostrar(&puerto->jornada_actual.buques_info, jornada_mostrar_buques, stdout);
+    lista_mostrar(&puerto->jornada_actual.camiones_info, jornada_mostrar_camiones, stdout);
+
+    printf("---\n\n");
 
 }
