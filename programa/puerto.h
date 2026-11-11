@@ -21,7 +21,7 @@ void puerto_crear(tPuerto *puerto, tConf conf);
 void puerto_destruir(tPuerto *puerto);
 void puerto_iniciar_jornada(tPuerto *puerto, tConf conf);
 int puerto_jornada_finalizada(const tPuerto *puerto);
-void puerto_reiniciar_jornada(tPuerto *puerto, tConf conf);
+void puerto_finalizar_jornada(tPuerto *puerto);
 
 void puerto_mostrar_estado(tPuerto*);
 void puerto_ejecutar_minuto(tPuerto *puerto);

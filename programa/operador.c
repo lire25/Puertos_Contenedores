@@ -5,7 +5,6 @@
 #include "../estructuras/estructuras.h"
 #include "utiles.h"
 
-int op_mostrar_texto(void *dato, FILE *fp);
 void op_pedir_operacion(tPuerto *puerto, tConf conf)
 {
 
@@ -109,10 +108,177 @@ int op_tipo_de_operacion(const char* nombre_operacion)
 int op_leer_argumento(tLista *args, const char *formato, void *dest)
 {
 
+    if (lista_es_vacia(args)) return 0;
+
     char arg_texto[ OPERADOR_ARGUMENTO_MAXTAM ];
-    lista_sacar_comienzo(args, &arg_texto[0], sizeof(char)*OPERADOR_ARGUMENTO_MAXTAM);
+    lista_sacar_comienzo(args, arg_texto, sizeof(char)*OPERADOR_ARGUMENTO_MAXTAM);
     arg_texto[OPERADOR_ARGUMENTO_MAXTAM-1] = '\0';
 
     return sscanf(arg_texto, formato, dest) == 1;
+
+}
+
+int op_comparar(const void *a, const void *b)
+{
+
+    tOpIndice *i1 = (tOpIndice*)a;
+    tOpIndice *i2 = (tOpIndice*)b;
+
+    return strcmp(i1->nombre, i2->nombre);
+
+}
+void op_crear_operador(const char *op_arch, const char *nombre, tArbol *arbol)
+{
+
+    tOpIndice ind;
+    tOperador operador;
+    unsigned pos;
+    if (op_operador_pos(nombre, arbol) >= 0) //si ya existe no hace falta crearlo
+        return;
+    FILE *fp = fopen(op_arch, "ab");
+    if (!fp)
+        return;
+    strcpy_s(operador.nombre, OPERADOR_NOMBRE_MAXTAM, nombre);
+    operador.cant_jornadas = 0;
+    operador.puntaje = 0;
+
+    fwrite(&operador, sizeof(tOperador), 1, fp);
+
+    fseek(fp, 0, SEEK_END);
+    pos = ftell(fp) / sizeof(tOperador) - 1;
+    ind.arch_pos = pos;
+    strcpy_s(ind.nombre, OPERADOR_NOMBRE_MAXTAM, nombre);
+
+    fclose(fp);
+
+    arbol_poner(arbol, &ind, sizeof(tOpIndice), op_comparar);
+
+}
+void op_cargar_arbolindice(const char *op_arch, tArbol *arbol)
+{
+
+    FILE *fp = fopen(op_arch, "rb");
+    tOpIndice ind;
+    tOperador operador;
+    unsigned pos;
+
+    arbol_crear(arbol);
+
+    if (!fp)
+        return;
+
+    while (fread(&operador, sizeof(tOperador), 1, fp))
+    {
+        ind.arch_pos = pos;
+        strcpy(ind.nombre, operador.nombre);
+        arbol_poner(arbol, &ind, sizeof(tOpIndice), op_comparar);
+        pos++;
+    }
+
+    fclose(fp);
+
+}
+int op_operador_pos(const char *nombre, tArbol *arbol_op)
+{
+
+    tOpIndice ind;
+    FILE *fp;
+
+    strcpy(ind.nombre, nombre);
+
+    if (!arbol_buscar(arbol_op, &ind, sizeof(tOpIndice), op_comparar))
+        return -1;
+
+    return ind.arch_pos;
+
+}
+int op_cargar_operador(const char *op_arch, tOperador *operador, const char *nombre, tArbol *arbol_op)
+{
+
+    FILE *fp;
+    int pos = op_operador_pos(nombre, arbol_op);
+
+    if (pos < 0)
+        return 0;
+
+    fp = fopen(op_arch, "rb");
+
+    if (!fp)
+        return 0;
+
+    fseek(fp, sizeof(tOperador)*pos, SEEK_SET);
+    fread(operador, sizeof(tOperador), 1, fp);
+
+    fclose(fp);
+
+    return 1;
+
+}
+void op_mostrar_operador(const char *op_arch, const char *jor_arch, const char *nombre, tArbol *arbol_op)
+{
+
+
+    FILE *fp;
+    tOperador operador;
+    tJornadaRegistro jreg;
+    int pos = op_operador_pos(nombre, arbol_op);
+    int i = 0;
+    if (!op_cargar_operador(op_arch, &operador, nombre, arbol_op))
+        return 0;
+
+    printf("[%u] : %s\n", pos, operador.nombre);
+    printf("Jornadas realizadas: %u\n", operador.cant_jornadas);
+    printf("Puntaje acumulado: %u\n", operador.puntaje);
+
+    fp = fopen(jor_arch, "rb");
+
+    while (fread(&jreg, sizeof(tJornadaRegistro), 1, fp))
+    {
+        if (jreg.operador == pos)
+        {
+            printf("\n---JORNADA %i---\n", i+1);
+            jornada_mostrar_registro(&jreg, stdout);
+            i++;
+        }
+    }
+
+    fclose(fp);
+
+    return 1;
+
+}
+void op_registrar_jornada(const char *op_arch, const char *jor_arch, const char *nombre, tArbol *arbol_op, tJornadaRegistro jreg)
+{
+
+    FILE *fp;
+    tOperador operador;
+    int pos = op_operador_pos(nombre, arbol_op);
+    if (!op_cargar_operador(op_arch, &operador, nombre, arbol_op))
+        return 0;
+
+    //guardo la jornada
+    fp = fopen(jor_arch, "ab");
+
+    if (!fp)
+        return;
+
+    jreg.operador = pos;
+
+    fwrite(&jreg, sizeof(tJornadaRegistro), 1, fp);
+
+    fclose(fp);
+
+    //actualizo el operador
+    operador.cant_jornadas++;
+    operador.puntaje += jornada_puntaje(&jreg);
+
+    fp = fopen(op_arch, "r+b");
+    if (!fp)
+        return;
+
+    fseek(fp, pos*sizeof(tOperador), SEEK_SET);
+    fwrite(&operador, sizeof(tOperador), 1, fp);
+
+    fclose(fp);
 
 }

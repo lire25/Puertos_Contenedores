@@ -31,15 +31,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="almacen.c">
+		<Unit filename="estructuras/arbol.c">
 			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="almacen.h" />
-		<Unit filename="configuracion.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="configuracion.h">
-			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="estructuras/cola.c">
 			<Option compilerVar="CC" />
@@ -51,37 +44,37 @@
 		<Unit filename="estructuras/pila.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="jornada.c">
+		<Unit filename="programa/almacen.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="jornada.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
-		<Unit filename="main.c">
+		<Unit filename="programa/almacen.h" />
+		<Unit filename="programa/configuracion.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="muelle.c">
+		<Unit filename="programa/configuracion.h" />
+		<Unit filename="programa/jornada.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="muelle.h" />
-		<Unit filename="operador.c">
+		<Unit filename="programa/jornada.h" />
+		<Unit filename="programa/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="operador.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
-		<Unit filename="puerto.c">
+		<Unit filename="programa/muelle.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="puerto.h">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
-		<Unit filename="utiles.c">
+		<Unit filename="programa/muelle.h" />
+		<Unit filename="programa/operador.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="utiles.h">
-			<Option target="&lt;{~None~}&gt;" />
+		<Unit filename="programa/operador.h" />
+		<Unit filename="programa/puerto.c">
+			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="programa/puerto.h" />
+		<Unit filename="programa/utiles.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="programa/utiles.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

@@ -4,14 +4,15 @@
 #include "../estructuras/estructuras.h"
 #include "configuracion.h"
 
+#define BUQUE_ID_INVALIDA 4294967295
+#define JORNADA_REGISTRO_MAXTAM 256
+
 typedef struct {
 
     unsigned buque_id;
     unsigned cont_id;
 
 } tContenedor;
-
-#define BUQUE_ID_INVALIDA 4294967295
 
 typedef struct {
     unsigned id;
@@ -31,8 +32,10 @@ typedef struct {
 } tJornada;
 
 typedef struct {
-    tLista *historial;
+    tLista historial;
+    unsigned operador;
     unsigned tiempo_usado;
+    unsigned tiempo_jornada;
     unsigned buques_des;
     unsigned conts_entr;
     unsigned reub_cont;
@@ -53,12 +56,14 @@ int jornada_mostrar_camiones(const void *dato, FILE *fp);
 
 void jornada_generar( tJornada* jornada, tConf config );
 void jornada_destruir(tJornada* jornada);
-int jornada_de_archivo(tJornada* jornada, char* arch_nombre, tConf *conf);
+//int jornada_de_archivo(tJornada* jornada, char* arch_nombre, tConf *conf);
 int jornada_mostrar_cont_pila(tPila *pila, FILE *fp); //muestra una pila de contenedores (C4,C3,C2,C1)
 
-void jornada_iniciar_registro(tJornadaRegistro *jreg);
+void jornada_iniciar_registro(tJornadaRegistro *jreg, tConf conf);
 unsigned jornada_puntaje(const tJornadaRegistro *jreg);
-void jornada_registrar_evento(tJornadaRegistro *jreg);
+void jornada_registrar_evento(tJornadaRegistro *jreg, const char *evento);
 void jornada_mostrar_historial(tJornadaRegistro *jreg);
+void jornada_mostrar_registro(const tJornadaRegistro *jreg, FILE *fp);
+void jornada_destruir_registro(tJornadaRegistro *jreg);
 
 #endif // JORNADA_H_INCLUDED

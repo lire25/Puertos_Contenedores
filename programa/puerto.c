@@ -39,11 +39,9 @@ void puerto_crear(tPuerto *puerto, tConf conf)
 
     puerto->config = conf;
 
-    jornada_generar(&puerto->jornada_actual, conf);
-
     puerto->minuto_actual = 0;
-
-    jornada_iniciar_registro(&puerto->jregistro);
+    jornada_generar(&puerto->jornada_actual, conf);
+    jornada_iniciar_registro(&puerto->jregistro, conf);
 
 }
 
@@ -59,19 +57,14 @@ int puerto_jornada_finalizada(const tPuerto *puerto)
 {
     return puerto->minuto_actual > puerto->config.duracion_jornada_minutos;
 }
-void puerto_reiniciar_jornada(tPuerto *puerto, tConf conf)
+void puerto_finalizar_jornada(tPuerto *puerto)
 {
 
+    jornada_mostrar_historial(&puerto->jregistro);
+    printf("\n---RESUMEN DE JORNADA---\n\n");
+    jornada_mostrar_registro(&puerto->jregistro, stdout);
+
     puerto_destruir(puerto);
-
-    jornada_mostrar_registro(&puerto->jregistro, stdout, conf);
-
-    printf("\nENTER PARA REINTENTAR");
-    fgetc(stdin);
-
-    system("cls");
-
-    puerto_crear(puerto, conf);
 
 }
 void puerto_destruir(tPuerto *puerto)
@@ -104,6 +97,7 @@ void puerto_destruir(tPuerto *puerto)
     free(puerto->almac_cant);
 
     jornada_destruir(&puerto->jornada_actual);
+    jornada_destruir_registro(&puerto->jregistro);
 
 }
 
@@ -178,6 +172,14 @@ void puerto_recibir_buque(tPuerto *puerto, tConf conf)
     //probar mandarlo a un muelle disponible
     muelle_recibir_buque(puerto);
 
+    char reg[JORNADA_REGISTRO_MAXTAM];
+    sprintf_s(
+              reg, JORNADA_REGISTRO_MAXTAM,
+              "T%u : Llega B%u",
+              puerto->minuto_actual, buque.id
+              );
+    jornada_registrar_evento(&puerto->jregistro, reg);
+
 }
 
 void puerto_recibir_camion(tPuerto *puerto, tConf conf)
@@ -186,6 +188,16 @@ void puerto_recibir_camion(tPuerto *puerto, tConf conf)
     tCamion cam;
     lista_sacar_comienzo( &puerto->jornada_actual.camiones_info, &cam, sizeof(tCamion) );
     cola_poner(&puerto->camiones_fila, &cam, sizeof(tCamion));
+
+    puerto->jregistro.cam_pend++;
+
+    char reg[JORNADA_REGISTRO_MAXTAM];
+    sprintf_s(
+              reg, JORNADA_REGISTRO_MAXTAM,
+              "T%u : Llega K%u",
+              puerto->minuto_actual, cam.id
+              );
+    jornada_registrar_evento(&puerto->jregistro, reg);
 
 }
 
@@ -275,10 +287,14 @@ int puerto_hay_operacion(tPuerto* puerto)
 int puerto_entregar(tPuerto *puerto)
 {
 
+    tCamion cam;
+    int zona;
+    int pudo_entregar;
+
     if (cola_es_vacia(&puerto->camiones_fila))
     {
         printf("\n-NO HAY CAMIONES EN FILA\n");
-        return;
+        return 0;
     }
 
     if (puerto->minuto_actual + puerto->config.tiempo_carga_camion > puerto->config.duracion_jornada_minutos)
@@ -287,13 +303,26 @@ int puerto_entregar(tPuerto *puerto)
         return 0;
     }
 
-    int zona = lista_recorrer(&puerto->zonas_alm, almac_zona_entregar, puerto);
-    int pudo_entregar = zona < puerto->config.cant_zonas_alm;
+    cola_ver_primero(&puerto->camiones_fila, &cam, sizeof(tCamion));
+
+    zona = lista_recorrer(&puerto->zonas_alm, almac_zona_entregar, puerto);
+    pudo_entregar = zona < puerto->config.cant_zonas_alm;
 
     if (pudo_entregar)
     {
+
         puerto->jregistro.conts_entr++;
+        puerto->jregistro.cam_pend--;
         puerto->jregistro.tiempo_usado = puerto->minuto_actual+puerto->config.tiempo_carga_camion;
+
+        char reg[JORNADA_REGISTRO_MAXTAM];
+        sprintf_s(
+                  reg, JORNADA_REGISTRO_MAXTAM,
+                  "T%u - T%u : ENT(Z%u -> C%u-%u -> K%u)",
+                  puerto->minuto_actual,puerto->jregistro.tiempo_usado, zona+1, cam.pedido.buque_id,cam.pedido.cont_id, cam.id
+                  );
+        jornada_registrar_evento(&puerto->jregistro, reg);
+
     }
     else
         printf("\n-NADA QUE ENTREGAR\n");
@@ -341,6 +370,14 @@ int puerto_reubicar(tPuerto *puerto, unsigned zona_orig, unsigned zona_dest)
 
     puerto->jregistro.reub_cont++;
     puerto->jregistro.tiempo_usado = puerto->minuto_actual+puerto->config.tiempo_reu_cont;
+
+    char reg[JORNADA_REGISTRO_MAXTAM];
+    sprintf_s(
+              reg, JORNADA_REGISTRO_MAXTAM,
+              "T%u - T%u : REU(Z%u -> C%u-%u -> Z%u)",
+              puerto->minuto_actual,puerto->jregistro.tiempo_usado, zona_orig+1, cont.buque_id,cont.cont_id, zona_dest+1
+              );
+    jornada_registrar_evento(&puerto->jregistro, reg);
 
     return 1;
 
@@ -397,6 +434,14 @@ int puerto_descargar(tPuerto* puerto, unsigned muelle_orig, unsigned zona_dest)
 
     puerto->jregistro.buques_des++;
     puerto->jregistro.tiempo_usado = puerto->minuto_actual+puerto->config.tiempo_desc_cont;
+
+    char reg[JORNADA_REGISTRO_MAXTAM];
+    sprintf_s(
+              reg, JORNADA_REGISTRO_MAXTAM,
+              "T%u - T%u : DES(M%u -> C%u-%u -> Z%u)",
+              puerto->minuto_actual,puerto->jregistro.tiempo_usado, muelle_orig+1, cont.buque_id,cont.cont_id, zona_dest+1
+              );
+    jornada_registrar_evento(&puerto->jregistro, reg);
 
     return 1;
 

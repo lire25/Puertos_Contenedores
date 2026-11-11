@@ -175,14 +175,17 @@ int jornada_mostrar_cont_pila(tPila *pila, FILE *fp)
 //camion pendiente
 #define PUNTAJE_VALOR_CAM 2
 
-void jornada_iniciar_registro(tJornadaRegistro *jreg)
+void jornada_iniciar_registro(tJornadaRegistro *jreg, tConf conf)
 {
+
+    lista_crear(&jreg->historial);
 
     jreg->buques_des = 0;
     jreg->cam_pend = 0;
     jreg->conts_entr = 0;
     jreg->reub_cont = 0;
     jreg->tiempo_usado = 0;
+    jreg->tiempo_jornada = conf.duracion_jornada_minutos;
 
 }
 unsigned jornada_puntaje(const tJornadaRegistro *jreg)
@@ -197,12 +200,10 @@ unsigned jornada_puntaje(const tJornadaRegistro *jreg)
     return puntaje;
 
 }
-void jornada_mostrar_registro(const tJornadaRegistro *jreg, FILE *fp, tConf conf)
+void jornada_mostrar_registro(const tJornadaRegistro *jreg, FILE *fp)
 {
 
-    fprintf(fp, "\n---RESUMEN DE JORNADA---\n\n");
-
-    fprintf(fp, "Tiempo utilizado: %u min de %u\n", jreg->tiempo_usado, conf.duracion_jornada_minutos);
+    fprintf(fp, "Tiempo utilizado: %u min de %u\n", jreg->tiempo_usado, jreg->tiempo_jornada);
     fprintf(fp, "Buqes descargados: %u | +%u puntos\n", jreg->buques_des, jreg->buques_des*PUNTAJE_VALOR_DES);
     fprintf(fp, "Contenedores entregados: %u | +%u puntos\n", jreg->conts_entr, jreg->conts_entr*PUNTAJE_VALOR_ENT);
     fprintf(fp, "Camiones pendientes: %u | -%u puntos\n", jreg->cam_pend, jreg->cam_pend*PUNTAJE_VALOR_CAM);
@@ -210,7 +211,29 @@ void jornada_mostrar_registro(const tJornadaRegistro *jreg, FILE *fp, tConf conf
     fprintf(fp, "Puntacion Final: %u puntos\n", jornada_puntaje(jreg));
 
 }
+void jornada_registrar_evento(tJornadaRegistro *jreg, const char *evento)
+{
+
+    unsigned slen = strlen(evento);
+
+    lista_poner_final(&jreg->historial, evento, sizeof(char)*(slen+1));
+
+}
+void jornada_mostrar_evento(const void *dato, FILE *fp)
+{
+
+    fprintf(fp, "-%s\n", (const char*)dato);
+
+}
 void jornada_mostrar_historial(tJornadaRegistro *jreg)
 {
 
+    printf("\n---HISTORIAL DE EVENTOS---\n");
+
+    lista_mostrar(&jreg->historial, jornada_mostrar_evento, stdout);
+
+}
+void jornada_destruir_registro(tJornadaRegistro *jreg)
+{
+    lista_vaciar(&jreg->historial);
 }

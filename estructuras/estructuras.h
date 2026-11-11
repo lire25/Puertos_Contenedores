@@ -18,12 +18,6 @@ typedef struct sNodo {
     struct sNodo* sig;
 } tNodo;
 
-typedef int (*fListaMostrar)(const void*, FILE*);
-typedef int (*fListaMostrarPos)(const void*, unsigned, FILE*);
-typedef int (*fListaComparar)(const void*, const void*);
-typedef int (*fListaAcumular)(void**, unsigned*, void*, unsigned);
-typedef int (*fListaRecorrer)(void*, void *, unsigned);
-
 //--------------------PILA--------------------
 
 typedef tNodo* tPila;
@@ -54,6 +48,12 @@ int cola_ver_primero(const tCola *p, void *dest, unsigned tam);
 
 typedef tNodo* tLista;
 
+typedef int (*fListaMostrar)(const void*, FILE*);
+typedef int (*fListaMostrarPos)(const void*, unsigned, FILE*);
+typedef int (*fListaComparar)(const void*, const void*);
+typedef int (*fListaAcumular)(void**, unsigned*, void*, unsigned);
+typedef int (*fListaRecorrer)(void*, void *, unsigned);
+
 void lista_crear(tLista*);
 int lista_vaciar(tLista*);
 int lista_es_llena(const tLista*, unsigned cant_bytes);
@@ -74,5 +74,31 @@ void lista_ordenar(tLista* lista, fListaComparar compfunc);
 int lista_recorrer(tLista *p, fListaRecorrer recorrer, void *arg);
 int lista_recorrer_filtrado(tLista*, fListaComparar, fListaRecorrer, void*);
 void* lista_ver_pos(tLista *p, unsigned pos);
+
+//--------------------ARBOL--------------------
+
+typedef int (*fArbolComparar) (const void *, const void *);
+typedef void (*fArbolMostrar) (const void *, FILE*);
+
+typedef struct sNodoArbol {
+    struct sNodoArbol *izq;
+    struct sNodoArbol *der;
+    void *info;
+    unsigned tam;
+} tNodoArbol;
+
+typedef enum {
+    ARBOLORDEN_PREORDER,
+    ARBOLORDEN_POSTORDER,
+    ARBOLORDEN_INORDER
+} eArbolOrden;
+
+typedef tNodoArbol* tArbol;
+
+void arbol_crear(tArbol *arbol);
+int arbol_es_vacio(const tArbol *pa);
+int arbol_poner(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp);
+int arbol_buscar(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp);
+void arbol_vaciar(tArbol *pa);
 
 #endif // ESTRUCTURAS_H_INCLUDED

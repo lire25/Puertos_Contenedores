@@ -7,11 +7,16 @@
 #include "puerto.h"
 #include "operador.h"
 
+#define ARCH_CONF "conf.txt"
+#define ARCH_OPERADORES "operadores.dat"
+#define ARCH_JORNADAS "jornadas.dat"
+
 /*
 
     TODO:
-    -historial de operaciones
     -registro de operadores
+    -menu
+    -puerto.txt
 
 */
 
@@ -23,26 +28,24 @@
 #endif
 */
 
-void finalizar_jornada(tPuerto*, tConf);
+void finalizar_jornada(tPuerto *puerto, tConf conf, const char* op_nombre, tArbol *arbol_op);
 
 int main()
 {
 
-    tConf conf = conf_leer_de_archivo("conf.txt");
-
-    tPuerto puerto;
-    puerto_crear(&puerto, conf);
-    puerto_iniciar_jornada(&puerto, conf);
-
-
-    lista_mostrar(&puerto.jornada_actual.buques_info, jornada_mostrar_buques, stdout);
-    lista_mostrar(&puerto.jornada_actual.camiones_info, jornada_mostrar_camiones, stdout);
-
-    printf("\n---\n\n");
-
+    char op_nombre[OPERADOR_NOMBRE_MAXTAM];
+    tArbol arbol_operadores;
     int salir = 0;
+    tConf conf = conf_leer_de_archivo(ARCH_CONF);
+    tPuerto puerto;
 
+    puerto_crear(&puerto, conf);
     puerto_ejecutar_minuto(&puerto);
+
+    strcpy(op_nombre, "MATEO");
+    op_cargar_arbolindice(ARCH_OPERADORES, &arbol_operadores);
+    op_crear_operador(ARCH_OPERADORES, op_nombre, &arbol_operadores);
+    op_mostrar_operador(ARCH_OPERADORES,ARCH_JORNADAS, op_nombre, &arbol_operadores);
 
     while (!salir)
     {
@@ -53,7 +56,7 @@ int main()
         {
 
             if (puerto_jornada_finalizada(&puerto))
-                finalizar_jornada(&puerto, conf);
+                finalizar_jornada(&puerto, conf, op_nombre, &arbol_operadores);
             else
                 puerto_avanzar_minuto(&puerto, 1);
 
@@ -68,10 +71,18 @@ int main()
 
 }
 
-void finalizar_jornada(tPuerto *puerto, tConf conf)
+void finalizar_jornada(tPuerto *puerto, tConf conf, const char* op_nombre, tArbol *arbol_op)
 {
 
-    puerto_reiniciar_jornada(puerto, conf);
+    system("cls");
+
+    op_registrar_jornada(ARCH_OPERADORES, ARCH_JORNADAS, op_nombre, arbol_op, puerto->jregistro);
+
+    puerto_finalizar_jornada(puerto);
+    printf("\nENTER PARA REINTENTAR\n");
+    fgetc(stdin);
+    system("cls");
+    puerto_crear(puerto, conf);
     puerto_ejecutar_minuto(puerto);
 
     printf("\n~~~~~~~~~~~~~~~NUEVA JORNADA~~~~~~~~~~~~~~~\n");
