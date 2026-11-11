@@ -1,0 +1,185 @@
+# depslib dependency file v1.0
+1794358303 source:d:\users\windows 10\documents\codeblocks\tp_ayed\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"estructuras/estructuras.h"
+	"configuracion.h"
+	"puerto.h"
+	"operador.h"
+
+1789945241 d:\users\windows 10\documents\codeblocks\tp_ayed\include\estr_datos.h
+	<stdio.h>
+
+1794165212 d:\users\windows 10\documents\codeblocks\estructurasdedatos\include\estr_datos.h
+	<stdio.h>
+
+1790106262 source:g:\tp_ayed\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"estr_datos.h"
+	"configuracion.h"
+	"jornada.h"
+
+1789946470 g:\estructurasdedatos\include\estr_datos.h
+	<stdio.h>
+
+1792180692 source:d:\users\windows 10\documents\codeblocks\tp_ayed\utiles.c
+	"utiles.h"
+
+1794358302 d:\users\windows 10\documents\codeblocks\tp_ayed\utiles.h
+	"estructuras/estructuras.h"
+
+1790119513 source:d:\users\windows 10\documents\codeblocks\tp_ayed\configuracion.c
+	"configuracion.h"
+	<string.h>
+	"utiles.h"
+
+1790032940 d:\users\windows 10\documents\codeblocks\tp_ayed\configuracion.h
+
+1790102108 source:g:\tp_ayed\configuracion.c
+	"configuracion.h"
+	<string.h>
+	"utiles.h"
+
+1790032940 g:\tp_ayed\configuracion.h
+
+1790029534 g:\tp_ayed\utiles.h
+	"estr_datos.h"
+
+1790030386 source:g:\tp_ayed\utiles.c
+	"utiles.h"
+
+1790106260 g:\tp_ayed\jornada.h
+	"estr_datos.h"
+	"configuracion.h"
+
+1790106246 source:g:\tp_ayed\jornada.c
+	"jornada.h"
+	<math.h>
+	<stdlib.h>
+
+1794358347 d:\users\windows 10\documents\codeblocks\tp_ayed\jornada.h
+	"estructuras/estructuras.h"
+	"configuracion.h"
+
+1794357301 source:d:\users\windows 10\documents\codeblocks\tp_ayed\jornada.c
+	"jornada.h"
+	<math.h>
+	<stdlib.h>
+	<string.h>
+	"utiles.h"
+
+1794358303 source:d:\users\windows 10\documents\codeblocks\tp_ayed\puerto.c
+	"puerto.h"
+	"estructuras/estructuras.h"
+	"utiles.h"
+	"almacen.h"
+	"muelle.h"
+
+1794356871 d:\users\windows 10\documents\codeblocks\tp_ayed\puerto.h
+	"jornada.h"
+
+1792172795 d:\users\windows 10\documents\codeblocks\tp_ayed\operador.h
+	"puerto.h"
+
+1794358372 source:d:\users\windows 10\documents\codeblocks\tp_ayed\operador.c
+	"operador.h"
+	<string.h>
+	"estructuras/estructuras.h"
+	"utiles.h"
+
+1794357533 source:d:\users\windows 10\documents\codeblocks\tp_ayed\almacen.c
+	"almacen.h"
+	"jornada.h"
+
+1794357496 d:\users\windows 10\documents\codeblocks\tp_ayed\almacen.h
+	"puerto.h"
+
+1794356921 source:d:\users\windows 10\documents\codeblocks\tp_ayed\muelle.c
+	"muelle.h"
+
+1794357581 d:\users\windows 10\documents\codeblocks\tp_ayed\muelle.h
+	"puerto.h"
+
+1794358411 d:\users\windows 10\documents\codeblocks\tp_ayed\estructuras\estructuras.h
+	<stdio.h>
+
+1794358205 source:d:\users\windows 10\documents\codeblocks\tp_ayed\estructuras\cola.c
+	"estructuras.h"
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+
+1794358193 source:d:\users\windows 10\documents\codeblocks\tp_ayed\estructuras\lista.c
+	"estructuras.h"
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+
+1794358075 source:d:\users\windows 10\documents\codeblocks\tp_ayed\estructuras\pila.c
+	"estructuras.h"
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+
+1794357533 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\almacen.c
+	"almacen.h"
+	"jornada.h"
+
+1794357496 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\almacen.h
+	"puerto.h"
+
+1794356871 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\puerto.h
+	"jornada.h"
+
+1794362931 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\jornada.h
+	"../estructuras/estructuras.h"
+	"configuracion.h"
+
+1790032940 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\configuracion.h
+
+1794356921 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\muelle.c
+	"muelle.h"
+
+1794357581 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\muelle.h
+	"puerto.h"
+
+1790119513 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\configuracion.c
+	"configuracion.h"
+	<string.h>
+	"utiles.h"
+
+1794362962 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\utiles.h
+	"../estructuras/estructuras.h"
+
+1794357301 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\jornada.c
+	"jornada.h"
+	<math.h>
+	<stdlib.h>
+	<string.h>
+	"utiles.h"
+
+1794362964 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\puerto.c
+	"puerto.h"
+	"../estructuras/estructuras.h"
+	"utiles.h"
+	"almacen.h"
+	"muelle.h"
+
+1792180692 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\utiles.c
+	"utiles.h"
+
+1794362993 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"../estructuras/estructuras.h"
+	"configuracion.h"
+	"puerto.h"
+	"operador.h"
+
+1792172795 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\operador.h
+	"puerto.h"
+
