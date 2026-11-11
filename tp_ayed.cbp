@@ -59,6 +59,10 @@
 		<Unit filename="programa/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="programa/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="programa/menu.h" />
 		<Unit filename="programa/muelle.c">
 			<Option compilerVar="CC" />
 		</Unit>

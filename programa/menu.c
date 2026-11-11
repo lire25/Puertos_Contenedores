@@ -16,12 +16,6 @@ void menu_cmd_iniciar(void *_menu);
 void menu_cmd_ver(void *_menu);
 void menu_cmd_salir(void *_menu);
 
-void mostrar_op(void *dato, FILE *fp)
-{
-    tOpIndice *ind = (tOpIndice*)dato;
-    fprintf(fp, "%s (%u)\n", ind->nombre, ind->arch_pos);
-}
-
 void menu_iniciar(tMenu *menu)
 {
 
@@ -121,7 +115,7 @@ void menu_procesar_consola(tMenu *menu)
 
     printf("\nCOMANDOS:\n");
     printf("\tINICIAR - Comienza la simulacion de una jornada\n");
-    printf("\tVER [NOMBRE_OPERADOR] - Muestra los registros del usuario dado\n");
+    printf("\tVER - Muestra los rankings de operadores\n");
     printf("\tSALIR - Terminar el programa\n");
     printf(">");
 
@@ -178,8 +172,6 @@ void menu_cmd_ver(void *_menu)
 
     tMenu *menu = (tMenu*)_menu;
 
-    //op_mostrar_operador(ARCH_OPERADORES, ARCH_JORNADAS, menu->operario_actual, &menu->operarios_abb);
-
     op_mostrar_ranking(ARCH_OPERADORES, &menu->operarios_abb);
 
 }
@@ -203,6 +195,7 @@ void menu_finalizar_simulacion(tMenu *menu)
     puerto_finalizar_jornada(&menu->puerto);
     printf("\nENTER PARA CONTINUAR\n");
     fgetc(stdin);
+    fflush(stdin);
     limpiar_pantalla();
 
     menu->estado = MENUESTADO_CONSOLA;

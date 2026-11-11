@@ -96,6 +96,8 @@ void puerto_destruir(tPuerto *puerto)
 void puerto_mostrar_estado(tPuerto* puerto)
 {
 
+    tCamion cam_aux;
+
     printf("\n-----MINUTO %u-----\n", puerto->minuto_actual);
 
     lista_mostrar_pos(&puerto->muelles, muelle_mostrar, stdout);
@@ -103,14 +105,10 @@ void puerto_mostrar_estado(tPuerto* puerto)
     lista_mostrar_pos(&puerto->zonas_alm, almac_mostrar_zona, stdout);
     putc('\n', stdout);
 
-    printf("Cola camiones: ");
-
-    if (cola_es_vacia(&puerto->camiones_fila))
-        printf("vacia\n");
-    else
+    if (!cola_es_vacia(&puerto->camiones_fila))
     {
-        putc('\n', stdout);
-        puerto_mostrar_camiones(&puerto->camiones_fila, stdout);
+        cola_ver_primero(&puerto->camiones_fila, &cam_aux, sizeof(tCamion));
+        printf("Camion en espera: K%u -> solicita C%u-%u\n", cam_aux.id, cam_aux.pedido.buque_id,cam_aux.pedido.cont_id);
     }
 
 }
@@ -208,15 +206,18 @@ void puerto_mostrar_camiones(tCola *cola, FILE *fp)
 
         cola_sacar(cola, &cam, sizeof(tCamion));
 
-        fprintf(
-                fp,
-                "%u) K%u -> solicita C%u-%u",
-                pos+1, cam.id, cam.pedido.buque_id, cam.pedido.cont_id
-                );
+        if (pos < 3)
+        {
+            fprintf(
+                    fp,
+                    "%u) K%u -> solicita C%u-%u",
+                    pos+1, cam.id, cam.pedido.buque_id, cam.pedido.cont_id
+                    );
 
-        if (pos == 0) fprintf(fp, "\t<- frente");
+            if (pos == 0) fprintf(fp, "\t<- frente");
 
-        fputc('\n', fp);
+            fputc('\n', fp);
+        }
 
         cola_poner(&cola_aux, &cam, sizeof(tCamion));
         pos++;
@@ -438,4 +439,17 @@ int puerto_descargar(tPuerto* puerto, unsigned muelle_orig, unsigned zona_dest)
     return 1;
 
 }
+void puerto_ver(tPuerto *puerto)
+{
 
+    printf("\nCola camiones: ");
+
+    if (cola_es_vacia(&puerto->camiones_fila))
+        printf("vacia\n");
+    else
+    {
+        putc('\n', stdout);
+        puerto_mostrar_camiones(&puerto->camiones_fila, stdout);
+    }
+
+}

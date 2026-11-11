@@ -13,12 +13,15 @@
 &conf->tiempo_desc_cont, &conf->tiempo_reu_cont, &conf->tiempo_carga_camion \
 }
 
+#define CONF_PARAM_MAXTAM 64
+#define CONF_LINEA_MAXTAM 256
+
 unsigned* conf_obtener_parametro(tConf *conf, const char* texto)
 {
 
-    char parametros[][64] = CONF_PARAMETROS_NOMBRES;
+    char parametros[][CONF_PARAM_MAXTAM] = CONF_PARAMETROS_NOMBRES;
     unsigned* punteros[] = CONF_PARAMETROS_PUNTEROS(conf);
-    unsigned cant_parametros = sizeof(parametros) / 64ull;
+    unsigned cant_parametros = sizeof(parametros) / CONF_PARAM_MAXTAM;
 
     for (int i = 0; i < cant_parametros; i++)
     {
@@ -32,11 +35,11 @@ unsigned* conf_obtener_parametro(tConf *conf, const char* texto)
 int conf_leer_linea(tConf *conf, char *linea)
 {
 
-    char parametros[][64] = CONF_PARAMETROS_NOMBRES;
+    char parametros[][CONF_PARAM_MAXTAM] = CONF_PARAMETROS_NOMBRES;
     unsigned* punteros[] = CONF_PARAMETROS_PUNTEROS(conf);
-    unsigned cant_parametros = sizeof(parametros) / 64ull;
+    unsigned cant_parametros = sizeof(parametros) / CONF_PARAM_MAXTAM;
 
-    char param[64];
+    char param[CONF_PARAM_MAXTAM];
     unsigned valor;
     unsigned *val_ptr;
     unsigned del_pos;
@@ -46,7 +49,7 @@ int conf_leer_linea(tConf *conf, char *linea)
     del_pos = texto_reemplazar(linea, ':', '\0');
     if (del_pos == -1) return;
 
-    strcpy_s(param, 64, linea);
+    strcpy_s(param, CONF_PARAM_MAXTAM, linea);
     sscanf(linea+del_pos+1, "%u", &valor);
 
     val_ptr = conf_obtener_parametro(conf, param);
@@ -60,8 +63,8 @@ tConf conf_leer_de_archivo(const char *arch_nombre)
 
     tConf conf = {0};
     FILE *arch;
-    char linea[512];
-    char param[64];
+    char linea[CONF_LINEA_MAXTAM];
+    char param[CONF_PARAM_MAXTAM];
     unsigned valor;
     unsigned del_pos;
     unsigned* val_ptr;
@@ -88,7 +91,7 @@ tConf conf_leer_de_archivo(const char *arch_nombre)
     while (!feof(arch))
     {
 
-        fgets(linea, 512, arch);
+        fgets(linea, CONF_LINEA_MAXTAM, arch);
 
         conf_leer_linea(&conf, linea);
 
@@ -106,9 +109,9 @@ void conf_guardar_configuracion(tConf* conf, const char *arch_nombre)
 
     if (!arch) return;
 
-    char parametros[][64] = CONF_PARAMETROS_NOMBRES;
+    char parametros[][CONF_PARAM_MAXTAM] = CONF_PARAMETROS_NOMBRES;
     unsigned* punteros[] = CONF_PARAMETROS_PUNTEROS(conf);
-    unsigned cant_parametros = sizeof(parametros) / 64ull;
+    unsigned cant_parametros = sizeof(parametros) / CONF_PARAM_MAXTAM;
 
     for (int i = 0; i < cant_parametros; i++)
         fprintf(arch, "%s : %u\n", parametros[i], *(punteros[i]));

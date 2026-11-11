@@ -49,7 +49,7 @@ void op_pedir_operacion(tPuerto *puerto, tConf conf)
         puerto_avanzar_minuto(puerto, 1);
         break;
     case OPERACION_VER:
-        puerto_mostrar_estado(puerto);
+        puerto_ver(puerto);
         break;
     case OPERACION_ENTREGAR:
         if (puerto_entregar(puerto))
@@ -313,7 +313,7 @@ void op_cargar_puntaje(void *dato, void *arg, unsigned pos) //carga los puntajes
 void op_mostrar_puntaje(void *dato, unsigned pos, FILE *fp)
 {
     tOpIndice *i1 = (tOpIndice*)dato;
-    fprintf(fp, "%u - %s : %u\n", pos, i1->nombre, i1->arch_pos);
+    fprintf(fp, "%u - %s : %u\n", pos+1, i1->nombre, i1->arch_pos);
 }
 void op_mostrar_ranking(const char *op_arch, tArbol *arbol_op)
 {

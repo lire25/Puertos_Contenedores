@@ -30,5 +30,6 @@ int puerto_hay_operacion(tPuerto* puerto);
 int puerto_entregar(tPuerto*);
 int puerto_reubicar(tPuerto *puerto, unsigned zona_orig, unsigned zona_dest);
 int puerto_descargar(tPuerto *puerto, unsigned muelle_orig, unsigned zona_dest);
+void puerto_ver(tPuerto *puerto);
 
 #endif // PUERTO_H_INCLUDED

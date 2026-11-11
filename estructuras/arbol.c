@@ -23,12 +23,12 @@ int arbol_poner(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp)
 
         nue = malloc(sizeof(tNodoArbol));
         if (!nue)
-            return 0;
+            return ESTD_SIN_MEMORIA;
         nue->info = malloc(tam);
         if (!nue->info)
         {
             free(nue);
-            return 0;
+            return ESTD_SIN_MEMORIA;
         }
         memcpy(nue->info, dato, tam);
         nue->tam = tam;
@@ -43,7 +43,7 @@ int arbol_poner(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp)
     diff = cmp((*pa)->info, dato);
 
     if (diff == 0)
-        return 0;
+        return ESTD_DUP;
 
     return arbol_poner( (diff < 0) ? &(*pa)->izq : &(*pa)->der, dato, tam, cmp );
 
@@ -51,15 +51,15 @@ int arbol_poner(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp)
 int arbol_buscar(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp)
 {
 
-    if (!(*pa))
-        return 0;
+    if (!*pa)
+        return ESTD_ERROR;
 
     int diff = cmp((*pa)->info, dato);
 
     if (diff == 0)
     {
         memcpy(dato, (*pa)->info, minimo((*pa)->tam, tam));
-        return 1;
+        return ESTD_OK;
     }
 
     if (diff < 0)
@@ -114,17 +114,17 @@ int arbol_a_lista(tArbol *pa, tLista *pl, eArbolOrden orden)
 {
 
     if (*pa == NULL)
-        return 1;
+        return ESTD_OK;
 
     tNodo *nue = malloc(sizeof(tNodo));
     if (!nue)
-        return 0;
+        return ESTD_SIN_MEMORIA;
 
     nue->info = malloc((*pa)->tam);
     if (!nue->info)
     {
         free(nue);
-        return 0;
+        return ESTD_SIN_MEMORIA;
     }
     memcpy(nue->info, (*pa)->info, (*pa)->tam);
     nue->sig = NULL;
@@ -152,6 +152,6 @@ int arbol_a_lista(tArbol *pa, tLista *pl, eArbolOrden orden)
         break;
     }
 
-    return 1;
+    return ESTD_OK;
 
 }

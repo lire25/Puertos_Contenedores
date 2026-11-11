@@ -35,44 +35,6 @@ int jornada_ordenar_buques(const void *a, const void *b)
 
 }
 
-//cuando se genera la lista de contenedores, se ordena aleatoreamente para darse a los camiones
-int jornada_ordenar_contenedores(const void *a, const void *b)
-{
-
-    return rand()%2;
-
-}
-
-int jornada_mostrar_conts(const void *dato, FILE *fp)
-{
-
-    tContenedor *c1 = (tContenedor*)dato;
-    fprintf(fp, "\tC%u-%u\n", c1->buque_id, c1->cont_id);
-
-    return 1;
-
-}
-int jornada_mostrar_buques(const void *dato, FILE *fp)
-{
-
-    tBuque *b1 = (tBuque*)dato;
-
-    fprintf(fp, "#B%u | T:%u\n", b1->id, b1->minuto_arrivo);
-    pila_mostrar(&b1->contenedores, jornada_mostrar_conts, fp);
-    return 1;
-
-}
-int jornada_mostrar_camiones(const void *dato, FILE *fp)
-{
-
-    tCamion *c1 = (tCamion*)dato;
-
-    fprintf(fp, "#K%u | T:%u | C%u-%u\n", c1->id, c1->minuto_arrivo, c1->pedido.buque_id, c1->pedido.cont_id);
-
-    return 1;
-
-}
-
 void jornada_generar( const char *arch_puerto, tJornada* jornada, tConf config )
 {
 

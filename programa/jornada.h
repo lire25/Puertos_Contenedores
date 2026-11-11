@@ -42,18 +42,6 @@ typedef struct {
     unsigned cam_pend;
 } tJornadaRegistro; //leva cuenta de valores a mostrar en el resumen final
 
-/*
-Tiempo utilizado: 21 min de 30
-Buques descargados: 2 -> 10 puntos
-Contenedores entregados: 5 -> 50 puntos
-Reorganizaciones: 1
-Camiones pendientes: 0 -> 0 puntos de penalización
-Puntuación final: 60 puntos
-*/
-
-int jornada_mostrar_buques(const void *dato, FILE *fp);
-int jornada_mostrar_camiones(const void *dato, FILE *fp);
-
 void jornada_generar( const char *arch_puerto, tJornada* jornada, tConf config );
 void jornada_destruir(tJornada* jornada);
 //int jornada_de_archivo(tJornada* jornada, char* arch_nombre, tConf *conf);
