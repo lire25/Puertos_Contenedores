@@ -31,7 +31,7 @@ typedef struct {
 void op_pedir_operacion(tPuerto *puerto, tConf conf);
 int op_tipo_de_operacion(const char* nombre_operacion);
 
-void op_crear_operador(const char *op_arch, const char *nombre, tArbol *arbol);
+int op_crear_operador(const char *op_arch, const char *nombre, tArbol *arbol);
 void op_cargar_arbolindice(const char *op_arch, tArbol *arbol);
 int op_operador_pos(const char *nombre, tArbol *arbol_op);
 int op_cargar_operador(const char *op_arch, tOperador *operador, const char *nombre, tArbol *arbol_op);

@@ -106,4 +106,6 @@ void arbol_vaciar(tArbol *pa)
     free((*pa)->info);
     free(*pa);
 
+    *pa = NULL;
+
 }

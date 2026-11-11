@@ -127,17 +127,17 @@ int op_comparar(const void *a, const void *b)
     return strcmp(i1->nombre, i2->nombre);
 
 }
-void op_crear_operador(const char *op_arch, const char *nombre, tArbol *arbol)
+int op_crear_operador(const char *op_arch, const char *nombre, tArbol *arbol)
 {
 
     tOpIndice ind;
     tOperador operador;
     unsigned pos;
     if (op_operador_pos(nombre, arbol) >= 0) //si ya existe no hace falta crearlo
-        return;
+        return 0;
     FILE *fp = fopen(op_arch, "ab");
     if (!fp)
-        return;
+        return 0;
     strcpy_s(operador.nombre, OPERADOR_NOMBRE_MAXTAM, nombre);
     operador.cant_jornadas = 0;
     operador.puntaje = 0;
@@ -153,6 +153,8 @@ void op_crear_operador(const char *op_arch, const char *nombre, tArbol *arbol)
 
     arbol_poner(arbol, &ind, sizeof(tOpIndice), op_comparar);
 
+    return 1;
+
 }
 void op_cargar_arbolindice(const char *op_arch, tArbol *arbol)
 {
@@ -160,7 +162,7 @@ void op_cargar_arbolindice(const char *op_arch, tArbol *arbol)
     FILE *fp = fopen(op_arch, "rb");
     tOpIndice ind;
     tOperador operador;
-    unsigned pos;
+    unsigned pos = 0;
 
     arbol_crear(arbol);
 
@@ -182,7 +184,6 @@ int op_operador_pos(const char *nombre, tArbol *arbol_op)
 {
 
     tOpIndice ind;
-    FILE *fp;
 
     strcpy(ind.nombre, nombre);
 

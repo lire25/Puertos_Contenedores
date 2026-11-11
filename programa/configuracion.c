@@ -46,7 +46,7 @@ int conf_leer_linea(tConf *conf, char *linea)
     del_pos = texto_reemplazar(linea, ':', '\0');
     if (del_pos == -1) return;
 
-    strcpy(param, linea);
+    strcpy_s(param, 64, linea);
     sscanf(linea+del_pos+1, "%u", &valor);
 
     val_ptr = conf_obtener_parametro(conf, param);

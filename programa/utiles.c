@@ -1,5 +1,8 @@
 #include "utiles.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 int diff_numeros_enteros(const void *a, const void *b)
 {
 
@@ -109,7 +112,7 @@ unsigned texto_encontrar(const char *texto, char car)
             return i;
     }
 
-    return 0xFFFFFFFFFFFFFFFF;
+    return len;
 
 }
 
@@ -130,4 +133,13 @@ int texto_reemplazar(char *texto, char viejo, char nuevo)
 
     return prim;
 
+}
+
+void limpiar_pantalla()
+{
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
