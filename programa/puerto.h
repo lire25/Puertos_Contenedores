@@ -17,9 +17,8 @@ typedef struct {
 
 #define MUELLE_VACIO BUQUE_ID_INVALIDA
 
-void puerto_crear(tPuerto *puerto, tConf conf);
+void puerto_crear(const char *puerto_arch, tPuerto *puerto, tConf conf);
 void puerto_destruir(tPuerto *puerto);
-void puerto_iniciar_jornada(tPuerto *puerto, tConf conf);
 int puerto_jornada_finalizada(const tPuerto *puerto);
 void puerto_finalizar_jornada(tPuerto *puerto);
 

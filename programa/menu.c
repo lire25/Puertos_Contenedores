@@ -7,6 +7,7 @@
 #define ARCH_CONF "conf.txt"
 #define ARCH_OPERADORES "operadores.dat"
 #define ARCH_JORNADAS "jornadas.dat"
+#define ARCH_PUERTO "puerto.txt"
 
 #define MENU_LINEA_MAXTAM 256
 #define MENU_ARG_MAXTAM 64
@@ -14,6 +15,12 @@
 void menu_cmd_iniciar(void *_menu);
 void menu_cmd_ver(void *_menu);
 void menu_cmd_salir(void *_menu);
+
+void mostrar_op(void *dato, FILE *fp)
+{
+    tOpIndice *ind = (tOpIndice*)dato;
+    fprintf(fp, "%s (%u)\n", ind->nombre, ind->arch_pos);
+}
 
 void menu_iniciar(tMenu *menu)
 {
@@ -29,6 +36,7 @@ void menu_iniciar(tMenu *menu)
     menu_agregar_comando(menu, "VER", menu_cmd_ver);
     menu_agregar_comando(menu, "INICIAR", menu_cmd_iniciar);
 
+    arbol_crear(&menu->operarios_abb);
     op_cargar_arbolindice(ARCH_OPERADORES, &menu->operarios_abb); //crear abb de operadores segun el archivo
 
 }
@@ -161,7 +169,7 @@ void menu_cmd_iniciar(void *_menu)
 
     limpiar_pantalla();
 
-    puerto_crear(&menu->puerto, menu->conf);
+    puerto_crear(ARCH_PUERTO, &menu->puerto, menu->conf);
     puerto_ejecutar_minuto(&menu->puerto);
 
 }
@@ -170,7 +178,9 @@ void menu_cmd_ver(void *_menu)
 
     tMenu *menu = (tMenu*)_menu;
 
-    op_mostrar_operador(ARCH_OPERADORES, ARCH_JORNADAS, menu->operario_actual, &menu->operarios_abb);
+    //op_mostrar_operador(ARCH_OPERADORES, ARCH_JORNADAS, menu->operario_actual, &menu->operarios_abb);
+
+    op_mostrar_ranking(ARCH_OPERADORES, &menu->operarios_abb);
 
 }
 void menu_cmd_salir(void *_menu)

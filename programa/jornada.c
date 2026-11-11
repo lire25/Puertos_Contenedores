@@ -73,7 +73,7 @@ int jornada_mostrar_camiones(const void *dato, FILE *fp)
 
 }
 
-void jornada_generar( tJornada* jornada, tConf config )
+void jornada_generar( const char *arch_puerto, tJornada* jornada, tConf config )
 {
 
     tCamion camion;
@@ -81,6 +81,17 @@ void jornada_generar( tJornada* jornada, tConf config )
     tContenedor cont;
 
     tLista contenedores;
+
+    FILE *fp = fopen(arch_puerto, "w");
+    if (!fp)
+        return;
+
+    fprintf(fp, "[CONFIGURACION]\n");
+    fprintf(
+            fp, "JORNADA:%u\nMUELLES:%u\nZONAS:%u\nCAPACIDAD_PILA:%u\n\n",
+            config.duracion_jornada_minutos,config.cant_muelles,config.cant_zonas_alm,
+            config.cap_pila
+            );
 
     lista_crear(&jornada->buques_info);
     lista_crear(&jornada->camiones_info);
@@ -90,7 +101,7 @@ void jornada_generar( tJornada* jornada, tConf config )
     unsigned max_tiempo_camion = config.duracion_jornada_minutos - (config.tiempo_desc_cont + config.tiempo_carga_camion);
     unsigned cant_conts;
 
-    //buques
+    fprintf(fp, "[BUQUES]\n");
     for (int i = 0; i < config.max_buques; i++)
     {
 
@@ -98,6 +109,7 @@ void jornada_generar( tJornada* jornada, tConf config )
         cant_conts = 1+rand()%config.max_cont_por_buque;
         max_tiempo_buque = config.duracion_jornada_minutos - (config.tiempo_desc_cont + config.tiempo_carga_camion)*cant_conts;
         buque.minuto_arrivo = rand()%max_tiempo_buque;
+        fprintf(fp, "B%u;T%u;", buque.id, buque.minuto_arrivo);
 
         pila_crear(&buque.contenedores);
         for (int j = 0; j < cant_conts; j++)
@@ -106,15 +118,17 @@ void jornada_generar( tJornada* jornada, tConf config )
             cont.cont_id = (cant_conts-j);
             pila_poner(&buque.contenedores, &cont, sizeof(tContenedor));
             lista_poner_final(&contenedores, &cont, sizeof(tContenedor));
+            if (j != 0)
+                fputc(',', fp);
+            fprintf(fp, "C%u-%u", cont.buque_id,j+1);
         }
+        fputc('\n', fp);
 
         lista_poner_ordenado(&jornada->buques_info, &buque, sizeof(tBuque), jornada_ordenar_buques, NULL);
 
     }
 
-    //lista_ordenar(&contenedores, jornada_ordenar_contenedores);
-
-    //camiones
+    fprintf(fp, "\n[CAMIONES]\n");
     for (int i = 0; i < config.max_camiones; i++)
     {
 
@@ -128,9 +142,13 @@ void jornada_generar( tJornada* jornada, tConf config )
         lista_sacar_comienzo(&contenedores, &camion.pedido, sizeof(tContenedor));
         lista_poner_ordenado(&jornada->camiones_info, &camion, sizeof(tCamion), jornada_ordenar_camiones, NULL);
 
+        fprintf(fp, "K%u;T%u;C%u-%u\n", camion.id, camion.minuto_arrivo, camion.pedido.buque_id, camion.pedido.cont_id);
+
     }
 
     lista_vaciar(&contenedores);
+
+    fclose(fp);
 
 }
 void jornada_destruir(tJornada* jornada)
@@ -169,6 +187,8 @@ int jornada_mostrar_cont_pila(tPila *pila, FILE *fp)
     return 0;
 
 }
+
+//----------REGISTRO DE JORNADAS----------
 
 #define PUNTAJE_VALOR_DES 5
 #define PUNTAJE_VALOR_ENT 10

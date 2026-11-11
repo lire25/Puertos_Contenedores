@@ -263,8 +263,8 @@ void lista_ordenar(tLista* p, fListaComparar compfunc)
 {
 
     tLista *pri = p;
-    tNodo *aux;
     tLista *q;
+    tNodo *aux;
 
     if (*p == NULL)
         return;
@@ -276,7 +276,7 @@ void lista_ordenar(tLista* p, fListaComparar compfunc)
             q = pri;
             aux = (*p)->sig;
             (*p)->sig = aux->sig;
-            while(compfunc((*q)->info, aux->info) > 0)
+            while(compfunc((*q)->info, aux->info) <= 0)
                 q = &(*q)->sig;
             aux->sig = *q;
             *q = aux;

@@ -38,4 +38,6 @@ int op_cargar_operador(const char *op_arch, tOperador *operador, const char *nom
 void op_mostrar_operador(const char *op_arch, const char *jor_arch, const char *nombre, tArbol *arbol_op);
 void op_registrar_jornada(const char *op_arch, const char *jor_arch, const char *nombre, tArbol *arbol_op, tJornadaRegistro jreg);
 
+void op_mostrar_ranking(const char *op_arch, tArbol *arbol_op);
+
 #endif // OPERDADOR_H_INCLUDED

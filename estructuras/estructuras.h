@@ -100,5 +100,6 @@ int arbol_es_vacio(const tArbol *pa);
 int arbol_poner(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp);
 int arbol_buscar(tArbol *pa, void *dato, unsigned tam, fArbolComparar cmp);
 void arbol_vaciar(tArbol *pa);
+int arbol_a_lista(tArbol *pa, tLista *pl, eArbolOrden orden);
 
 #endif // ESTRUCTURAS_H_INCLUDED

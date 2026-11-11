@@ -109,3 +109,49 @@ void arbol_vaciar(tArbol *pa)
     *pa = NULL;
 
 }
+
+int arbol_a_lista(tArbol *pa, tLista *pl, eArbolOrden orden)
+{
+
+    if (*pa == NULL)
+        return 1;
+
+    tNodo *nue = malloc(sizeof(tNodo));
+    if (!nue)
+        return 0;
+
+    nue->info = malloc((*pa)->tam);
+    if (!nue->info)
+    {
+        free(nue);
+        return 0;
+    }
+    memcpy(nue->info, (*pa)->info, (*pa)->tam);
+    nue->sig = NULL;
+    nue->tam = (*pa)->tam;
+
+    switch (orden)
+    {
+    case ARBOLORDEN_PREORDER:
+        while (*pl) pl = &(*pl)->sig;
+        *pl = nue;
+        arbol_a_lista(&(*pa)->izq, pl, orden);
+        arbol_a_lista(&(*pa)->der, pl, orden);
+        break;
+    case ARBOLORDEN_INORDER:
+        arbol_a_lista(&(*pa)->izq, pl, orden);
+        while (*pl) pl = &(*pl)->sig;
+        *pl = nue;
+        arbol_a_lista(&(*pa)->der, pl, orden);
+        break;
+    case ARBOLORDEN_POSTORDER:
+        arbol_a_lista(&(*pa)->izq, pl, orden);
+        arbol_a_lista(&(*pa)->der, pl, orden);
+        while (*pl) pl = &(*pl)->sig;
+        *pl = nue;
+        break;
+    }
+
+    return 1;
+
+}

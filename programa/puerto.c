@@ -12,7 +12,7 @@ void puerto_recibir_camion(tPuerto *puerto, tConf conf);
 
 int puerto_almacenamiento_sacar_tope(void *dato, void *arg, unsigned pos);
 
-void puerto_crear(tPuerto *puerto, tConf conf)
+void puerto_crear(const char *puerto_arch, tPuerto *puerto, tConf conf)
 {
 
     tBuque buque_muelle_aux;
@@ -40,19 +40,11 @@ void puerto_crear(tPuerto *puerto, tConf conf)
     puerto->config = conf;
 
     puerto->minuto_actual = 0;
-    jornada_generar(&puerto->jornada_actual, conf);
+    jornada_generar(puerto_arch, &puerto->jornada_actual, conf);
     jornada_iniciar_registro(&puerto->jregistro, conf);
 
 }
 
-void puerto_iniciar_jornada(tPuerto *puerto, tConf conf)
-{
-
-    jornada_generar(&puerto->jornada_actual, conf);
-
-    puerto->minuto_actual = 0;
-
-}
 int puerto_jornada_finalizada(const tPuerto *puerto)
 {
     return puerto->minuto_actual > puerto->config.duracion_jornada_minutos;

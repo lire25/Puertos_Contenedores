@@ -54,7 +54,7 @@ Puntuación final: 60 puntos
 int jornada_mostrar_buques(const void *dato, FILE *fp);
 int jornada_mostrar_camiones(const void *dato, FILE *fp);
 
-void jornada_generar( tJornada* jornada, tConf config );
+void jornada_generar( const char *arch_puerto, tJornada* jornada, tConf config );
 void jornada_destruir(tJornada* jornada);
 //int jornada_de_archivo(tJornada* jornada, char* arch_nombre, tConf *conf);
 int jornada_mostrar_cont_pila(tPila *pila, FILE *fp); //muestra una pila de contenedores (C4,C3,C2,C1)
