@@ -316,7 +316,7 @@ int lista_recorrer_filtrado(tLista* p, fListaComparar fcomp, fListaRecorrer frec
 
         if (fcomp((*p)->info, dato) != 0) continue;
 
-        if (!frec((*p)->info, (*p)->tam, i))
+        if (!frec((*p)->info, dato, i))
             return i;
         p = &(*p)->sig;
         i++;

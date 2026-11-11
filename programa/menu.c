@@ -106,8 +106,6 @@ void menu_procesar_simulacion(tMenu *menu)
 void menu_procesar_consola(tMenu *menu)
 {
 
-    //printf("\t!\n");
-
     char linea[MENU_LINEA_MAXTAM] = "";
     char cmd_texto[MENU_CMD_MAXTAM] = "";
     unsigned sep_pos;
@@ -189,8 +187,9 @@ void menu_finalizar_simulacion(tMenu *menu)
 
     limpiar_pantalla();
 
-    ///TODO: funcion envoltoria
-    op_registrar_jornada(ARCH_OPERADORES, ARCH_JORNADAS, menu->operario_actual, &menu->operarios_abb, menu->puerto.jregistro);
+    tJornadaRegistro jornada_res = puerto_estadisticas(&menu->puerto);
+
+    op_registrar_jornada(ARCH_OPERADORES, ARCH_JORNADAS, menu->operario_actual, &menu->operarios_abb, jornada_res);
 
     puerto_finalizar_jornada(&menu->puerto);
     printf("\nENTER PARA CONTINUAR\n");
@@ -202,3 +201,7 @@ void menu_finalizar_simulacion(tMenu *menu)
 
 }
 
+int menu_pide_salida(const tMenu *menu)
+{
+    return menu->req_salir;
+}

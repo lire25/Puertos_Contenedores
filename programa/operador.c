@@ -21,7 +21,7 @@ void op_pedir_operacion(tPuerto *puerto, tConf conf)
     char nombre_comando[4];
 
     char op_texto[OPERADOR_LINEA_MAXTAM];
-    //scanf("%s", op_texto);
+
     fflush(stdin);
     fgets(op_texto, OPERADOR_LINEA_MAXTAM, stdin);
 
@@ -98,7 +98,8 @@ int op_tipo_de_operacion(const char* nombre_operacion)
 
     for (int i = 0; i < OPERACION_CANTIDAD; i++)
     {
-        if (!strcasecmp(nombre_operacion, nombres[i])) return i;
+        if (!strcasecmp(nombre_operacion, nombres[i]))
+            return i;
     }
 
     return OPERACION_CANTIDAD;
@@ -341,6 +342,7 @@ void op_mostrar_ranking(const char *op_arch, tArbol *arbol_op)
     //ordeno por puntaje
     lista_ordenar(&lista, op_comparar_pos);
 
+    //muestro la lista ordenada por puntaje
     lista_mostrar_pos(&lista, op_mostrar_puntaje, stdout);
 
     lista_vaciar(&lista);

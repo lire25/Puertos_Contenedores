@@ -35,10 +35,6 @@ unsigned* conf_obtener_parametro(tConf *conf, const char* texto)
 int conf_leer_linea(tConf *conf, char *linea)
 {
 
-    char parametros[][CONF_PARAM_MAXTAM] = CONF_PARAMETROS_NOMBRES;
-    unsigned* punteros[] = CONF_PARAMETROS_PUNTEROS(conf);
-    unsigned cant_parametros = sizeof(parametros) / CONF_PARAM_MAXTAM;
-
     char param[CONF_PARAM_MAXTAM];
     unsigned valor;
     unsigned *val_ptr;
@@ -47,7 +43,7 @@ int conf_leer_linea(tConf *conf, char *linea)
     texto_remover_espacio(linea);
 
     del_pos = texto_reemplazar(linea, ':', '\0');
-    if (del_pos == -1) return;
+    if (del_pos == -1) return 0;
 
     strcpy_s(param, CONF_PARAM_MAXTAM, linea);
     sscanf(linea+del_pos+1, "%u", &valor);
@@ -64,10 +60,6 @@ tConf conf_leer_de_archivo(const char *arch_nombre)
     tConf conf = {0};
     FILE *arch;
     char linea[CONF_LINEA_MAXTAM];
-    char param[CONF_PARAM_MAXTAM];
-    unsigned valor;
-    unsigned del_pos;
-    unsigned* val_ptr;
 
     conf.cant_muelles = 1;
     conf.cant_zonas_alm = 3;

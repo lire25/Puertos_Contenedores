@@ -453,3 +453,8 @@ void puerto_ver(tPuerto *puerto)
     }
 
 }
+
+tJornadaRegistro puerto_estadisticas(tPuerto *puerto)
+{
+    return puerto->jregistro;
+}

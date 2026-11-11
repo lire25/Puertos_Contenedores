@@ -35,5 +35,6 @@ void menu_iniciar(tMenu *menu);
 void menu_procesar(tMenu *menu);
 void menu_terminar(tMenu *menu);
 void menu_agregar_comando(tMenu *menu, const char *nombre, void (*func)(void*));
+int menu_pide_salida(const tMenu *menu);
 
 #endif // MENU_H_INCLUDED

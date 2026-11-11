@@ -112,7 +112,7 @@
 	<stdlib.h>
 	<memory.h>
 
-1794418950 source:d:\users\windows 10\documents\codeblocks\tp_ayed\estructuras\lista.c
+1794435286 source:d:\users\windows 10\documents\codeblocks\tp_ayed\estructuras\lista.c
 	"estructuras.h"
 	<stdio.h>
 	<stdlib.h>
@@ -131,7 +131,7 @@
 1794357496 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\almacen.h
 	"puerto.h"
 
-1794422890 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\puerto.h
+1794435865 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\puerto.h
 	"jornada.h"
 
 1794420547 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\jornada.h
@@ -146,7 +146,7 @@
 1794357581 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\muelle.h
 	"puerto.h"
 
-1794423158 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\configuracion.c
+1794435322 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\configuracion.c
 	"configuracion.h"
 	<string.h>
 	"utiles.h"
@@ -161,7 +161,7 @@
 	<string.h>
 	"utiles.h"
 
-1794422957 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\puerto.c
+1794435877 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\puerto.c
 	"puerto.h"
 	"../estructuras/estructuras.h"
 	"utiles.h"
@@ -186,7 +186,7 @@
 1794419215 d:\users\windows 10\documents\codeblocks\tp_ayed\programa\operador.h
 	"puerto.h"
 
-1794422901 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\operador.c
+1794436211 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\operador.c
 	"operador.h"
 	<string.h>
 	"../estructuras/estructuras.h"
@@ -198,7 +198,7 @@
 	<stdlib.h>
 	<memory.h>
 
-1794421874 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\menu.c
+1794423723 source:d:\users\windows 10\documents\codeblocks\tp_ayed\programa\menu.c
 	"menu.h"
 	<stdbool.h>
 	"configuracion.h"
