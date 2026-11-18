@@ -13,7 +13,7 @@ int muelle_recibir_buque(tPuerto *puerto)
     //hasta encontrar un muelle vacio, ahi copio el buque que estaba esperando
     while (!lista_es_vacia(&puerto->muelles))
     {
-        int estado = lista_sacar_comienzo(&puerto->muelles,&buque_muelle_aux, sizeof(tBuque));
+        lista_sacar_comienzo(&puerto->muelles,&buque_muelle_aux, sizeof(tBuque));
         if (buque_muelle_aux.id == BUQUE_ID_INVALIDA && !res) //si el muelle esta vacio
         {
             cola_sacar(&puerto->buques_fila, &buque_muelle_aux, sizeof(tBuque));
@@ -55,7 +55,7 @@ void muelle_mostrar(const void *dato, unsigned pos, FILE *fp)
     }
 }
 
-int muelle_limpiar(const void *dato, void *arg, unsigned pos)
+int muelle_limpiar(void *dato, void *arg, unsigned pos)
 {
     tBuque *buque = (tBuque*)dato;
     if (buque->id != BUQUE_ID_INVALIDA)

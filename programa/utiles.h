@@ -11,5 +11,6 @@ tLista texto_separado(char *texto, char del, unsigned short max_tam);
 int texto_separado_pila(tPila* pila, char *texto, char del, unsigned short max_tam);
 unsigned texto_encontrar(const char *texto, char car);
 int texto_reemplazar(char *texto, char viejo, char nuevo);
+void limpiar_pantalla();
 
 #endif // UTILES_H_INCLUDED

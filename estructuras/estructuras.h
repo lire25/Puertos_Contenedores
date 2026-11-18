@@ -48,8 +48,8 @@ int cola_ver_primero(const tCola *p, void *dest, unsigned tam);
 
 typedef tNodo* tLista;
 
-typedef int (*fListaMostrar)(const void*, FILE*);
-typedef int (*fListaMostrarPos)(const void*, unsigned, FILE*);
+typedef void (*fListaMostrar)(const void*, FILE*);
+typedef void (*fListaMostrarPos)(const void*, unsigned, FILE*);
 typedef int (*fListaComparar)(const void*, const void*);
 typedef int (*fListaAcumular)(void**, unsigned*, void*, unsigned);
 typedef int (*fListaRecorrer)(void*, void *, unsigned);

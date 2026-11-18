@@ -5,13 +5,14 @@
 #include "../estructuras/estructuras.h"
 #include "utiles.h"
 
+int op_leer_argumento(tLista *args, const char *formato, void *dest);
+
 void op_pedir_operacion(tPuerto *puerto, tConf conf)
 {
 
     printf("\nOPERADOR>");
 
     unsigned comando;
-    unsigned arg_aux;
 
     unsigned zona_orig, zona_dest;
     unsigned muelle_orig;
@@ -28,7 +29,7 @@ void op_pedir_operacion(tPuerto *puerto, tConf conf)
     texto_remover_caracter(op_texto, '\n');
     tLista cmd_args = texto_separado(op_texto, ' ', OPERADOR_ARGUMENTO_MAXTAM);
 
-    if (lista_es_vacia(cmd_args))
+    if (lista_es_vacia(&cmd_args))
     {
         printf("error en entrada de comando\n");
         return;
@@ -64,7 +65,7 @@ void op_pedir_operacion(tPuerto *puerto, tConf conf)
                 puerto_avanzar_minuto(puerto, puerto->config.tiempo_reu_cont);
         }
         else
-            printf("\n\t*ERROR*: ARGUMENTOS NO RECONOCIDOS (REU Z%u Z%u)\n");
+            printf("\n\t*ERROR*: ARGUMENTOS NO RECONOCIDOS (REU Z%%u Z%%u)\n");
         break;
     case OPERACION_DESCARGAR:
         error = !op_leer_argumento(&cmd_args, "%*[Mm]%u", &muelle_orig);
@@ -82,7 +83,7 @@ void op_pedir_operacion(tPuerto *puerto, tConf conf)
         break;
     }
 
-    return 1;
+    return;
 
 }
 
@@ -226,7 +227,13 @@ void op_mostrar_operador(const char *op_arch, const char *jor_arch, const char *
     int pos = op_operador_pos(nombre, arbol_op);
     int i = 0;
     if (!op_cargar_operador(op_arch, &operador, nombre, arbol_op))
-        return 0;
+    {
+
+        printf("\n*ERROR* OPERADOR %s NO ESTA REGISTRADO\n\n", nombre);
+
+        return;
+
+    }
 
     printf("[%u] : %s\n", pos, operador.nombre);
     printf("Jornadas realizadas: %u\n", operador.cant_jornadas);
@@ -246,7 +253,7 @@ void op_mostrar_operador(const char *op_arch, const char *jor_arch, const char *
 
     fclose(fp);
 
-    return 1;
+    return;
 
 }
 void op_registrar_jornada(const char *op_arch, const char *jor_arch, const char *nombre, tArbol *arbol_op, tJornadaRegistro jreg)
@@ -256,7 +263,10 @@ void op_registrar_jornada(const char *op_arch, const char *jor_arch, const char 
     tOperador operador;
     int pos = op_operador_pos(nombre, arbol_op);
     if (!op_cargar_operador(op_arch, &operador, nombre, arbol_op))
-        return 0;
+    {
+        printf("\n*ERROR AL REGISTRAR JORNADA*\n\n");
+        return;
+    }
 
     //guardo la jornada
     fp = fopen(jor_arch, "ab");
@@ -295,7 +305,7 @@ int op_comparar_pos(const void *a, const void *b) //se usa para ordenar por punt
     return (int)(i2->arch_pos) - (int)(i1->arch_pos);
 
 }
-void op_cargar_puntaje(void *dato, void *arg, unsigned pos) //carga los puntajes de una lista de indices
+int op_cargar_puntaje(void *dato, void *arg, unsigned pos) //carga los puntajes de una lista de indices
 {
 
     tOpIndice *ind = (tOpIndice*)dato;
@@ -310,8 +320,10 @@ void op_cargar_puntaje(void *dato, void *arg, unsigned pos) //carga los puntajes
     ind->arch_pos = operador.puntaje;
     //esto va a convertir la lista de [nombre,pos archivo] a [nombre, puntaje]. que se necesita para el ranking
 
+    return 1;
+
 }
-void op_mostrar_puntaje(void *dato, unsigned pos, FILE *fp)
+void op_mostrar_puntaje(const void *dato, unsigned pos, FILE *fp)
 {
     tOpIndice *i1 = (tOpIndice*)dato;
     fprintf(fp, "%u - %s : %u\n", pos+1, i1->nombre, i1->arch_pos);
@@ -325,7 +337,7 @@ void op_mostrar_ranking(const char *op_arch, tArbol *arbol_op)
 
     fp = fopen(op_arch, "r");
 
-    if (!fp || arbol_es_vacio(&arbol_op))
+    if (!fp || arbol_es_vacio(arbol_op))
     {
         printf("\n-NO EXISTE REGISTRO DE OPERADORES\n\n");
         return;

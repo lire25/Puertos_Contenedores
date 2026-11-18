@@ -1,6 +1,8 @@
 #include "menu.h"
 
 #include <stdbool.h>
+#include <string.h>
+
 #include "configuracion.h"
 #include "utiles.h"
 
@@ -15,6 +17,11 @@
 void menu_cmd_iniciar(void *_menu);
 void menu_cmd_ver(void *_menu);
 void menu_cmd_salir(void *_menu);
+
+void menu_procesar_nombre(tMenu *menu);
+void menu_procesar_consola(tMenu *menu);
+void menu_procesar_simulacion(tMenu *menu);
+void menu_finalizar_simulacion(tMenu *menu);
 
 void menu_iniciar(tMenu *menu)
 {
@@ -108,7 +115,6 @@ void menu_procesar_consola(tMenu *menu)
 
     char linea[MENU_LINEA_MAXTAM] = "";
     char cmd_texto[MENU_CMD_MAXTAM] = "";
-    unsigned sep_pos;
     int encuentra_func = false;
 
     printf("\nCOMANDOS:\n");
@@ -122,7 +128,6 @@ void menu_procesar_consola(tMenu *menu)
     fgets(linea, MENU_CMD_MAXTAM, stdin);
 
     texto_remover_caracter(linea, '\n');
-    sep_pos = texto_encontrar(linea, ' ');
 
     strcpy_s(cmd_texto, MENU_CMD_MAXTAM, linea);
 

@@ -1,7 +1,9 @@
 #include "puerto.h"
+
+#include <stdlib.h>
+
 #include "../estructuras/estructuras.h"
 #include "utiles.h"
-
 #include "almacen.h"
 #include "muelle.h"
 
@@ -154,7 +156,6 @@ void puerto_recibir_buque(tPuerto *puerto, tConf conf)
 {
 
     tBuque buque;
-    int siguiente_muelle;
 
     lista_sacar_comienzo(&puerto->jornada_actual.buques_info, &buque, sizeof(tBuque));
     cola_poner(&puerto->buques_fila, &buque, sizeof(tBuque));

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int diff_numeros_enteros(const void *a, const void *b)
 {
