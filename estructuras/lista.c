@@ -16,7 +16,7 @@ int lista_vaciar(tLista* p)
     while (*p)
     {
         aux = *p;
-        p = &aux->sig;
+        *p = aux->sig;
         free(aux->info);
         free(aux);
         cant++;
@@ -204,7 +204,7 @@ int lista_mostrar_vaciar(tLista* p, fListaMostrar mostrar_func, FILE *fp)
     while (*p)
     {
         aux = *p;
-        p = &aux->sig;
+        *p = aux->sig;
         mostrar_func((*p)->info, fp);
         free(aux->info);
         free(aux);

@@ -37,6 +37,7 @@ int cola_poner(tCola *p, const void *dato, unsigned tam)
     {
         free(nue->info);
         free(nue);
+        return ESTD_SIN_MEMORIA;
     }
 
     memcpy(nue->info, dato, tam);
